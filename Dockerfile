@@ -16,26 +16,17 @@ RUN apt-get update && apt-get install -y \
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 
-# 安装 Miniconda
-RUN curl -o /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash /tmp/miniconda.sh -b -p /opt/conda && \
-    rm /tmp/miniconda.sh
+# 安装 Python 3.8 + pip
+RUN apt-get update && apt-get install -y python3 python3-pip && \
+    ln -sf python3 /usr/bin/python
 
-# 设置环境变量
-ENV PATH="/opt/conda/bin:$PATH"
-
-# 创建并激活 Conda 环境
-RUN conda create -n sadtalker python=3.8 -y
-ENV CONDA_DEFAULT_ENV=sadtalker
-ENV PATH="/opt/conda/envs/sadtalker/bin:$PATH"
-
-# Step 2.1: 安装 PyTorch（CUDA 113）
+# ✅ 直接安装 PyTorch（CUDA 113）
 RUN pip install torch==1.12.1+cu113 \
     torchvision==0.13.1+cu113 \
     torchaudio==0.12.1 \
     --extra-index-url https://download.pytorch.org/whl/cu113
 
-# Step 2.2: 安装 Flask（单独一层，便于后续更新）
+# ✅ 直接安装 Flask
 RUN pip install flask
 
 # Step 1: 复制 requirements.txt
@@ -48,7 +39,7 @@ RUN pip install -r /app/requirements.txt
 COPY ./SadTalker /app
 COPY ./serve.py /app/serve.py
 
-# ✅ 关键：在构建时自动下载权重文件
+# ✅ 在构建时自动下载权重文件
 RUN chmod +x /app/scripts/download_models.sh && \
     /app/scripts/download_models.sh
 
