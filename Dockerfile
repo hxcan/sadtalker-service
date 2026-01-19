@@ -1,5 +1,5 @@
-# 使用官方的 Python 基础镜像（支持 arm64）
-FROM nvidia/cuda:11.3.1-base-ubuntu20.04
+# 使用官方的 CUDA 12.1 基础镜像（支持 arm64）
+FROM nvidia/cuda:12.1.1-base-ubuntu22.04
 
 # 设置非交互式安装模式
 ENV DEBIAN_FRONTEND=noninteractive
@@ -16,11 +16,7 @@ RUN apt-get update && apt-get install -y \
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 
-# 安装 Python 3.8 + pip
-RUN apt-get update && apt-get install -y python3 python3-pip && \
-    ln -sf python3 /usr/bin/python
-
-# ✅ 关键：使用 torch==1.12.1+cu113 的 Python 3.8 版本
+# ✅ 关键：使用 torch==1.12.1+cu113 的 Python 3.10 版本
 RUN pip install torch==1.12.1+cu113 \
     torchvision==0.13.1+cu113 \
     torchaudio==0.12.1 \
