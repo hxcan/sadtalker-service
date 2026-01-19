@@ -3,7 +3,7 @@ name: Build & Push Docker Image
 on:
   push:
     branches:
-      - master  # ✅ 默认分支
+      - master
 
 jobs:
   build:
@@ -43,11 +43,12 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: true
           tags: |
-            hxcan/sadtalker:${{ env.SHORT_SHA }}
+            hxcan/sadtalker:${{ steps.vars.outputs.SHORT_SHA }}
           build-args: |
             BUILDKIT_INLINE_CACHE=1
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Print image tag
-        run: echo "Built image: hxcan/sadtalker:${{ env.SHORT_SHA }}"
+        run: |
+          echo "Built image: hxcan/sadtalker:${{ steps.vars.outputs.SHORT_SHA }}"
