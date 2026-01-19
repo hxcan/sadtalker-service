@@ -20,11 +20,13 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
 RUN apt-get update && apt-get install -y python3 python3-pip && \
     ln -sf python3 /usr/bin/python
 
-# ✅ 直接安装 PyTorch（CUDA 113）
+# ✅ 关键：使用 torch==1.12.1+cu113 的 Python 3.8 版本
 RUN pip install torch==1.12.1+cu113 \
     torchvision==0.13.1+cu113 \
     torchaudio==0.12.1 \
-    --extra-index-url https://download.pytorch.org/whl/cu113
+    --extra-index-url https://download.pytorch.org/whl/cu113 \
+    --force-reinstall \
+    --no-cache-dir
 
 # ✅ 直接安装 Flask
 RUN pip install flask
