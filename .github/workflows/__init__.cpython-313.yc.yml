@@ -30,10 +30,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract short commit hash
-        id: vars
-        run: |
-          echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/sadtalker
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -42,8 +43,7 @@ jobs:
           file: Dockerfile
           platforms: ${{ matrix.platform }}
           push: true
-          tags: |
-            hxcan/sadtalker:${{ steps.vars.outputs.SHORT_SHA }}
+          tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             BUILDKIT_INLINE_CACHE=1
           cache-from: type=gha
@@ -51,4 +51,4 @@ jobs:
 
       - name: Print image tag
         run: |
-          echo "Built image: hxcan/sadtalker:${{ steps.vars.outputs.SHORT_SHA }}"
+          echo "Built image: ${{ steps.meta.outputs.tags }}"
