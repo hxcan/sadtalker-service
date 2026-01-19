@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     tzdata \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # 手动设置时区为 Asia/Shanghai
