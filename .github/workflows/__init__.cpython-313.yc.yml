@@ -35,9 +35,9 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/sadtalker
-          # ✅ 关键：使用 github.sha 作为标签
+          # ✅ 关键：只设置标签，不包含镜像名
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/sadtalker:${{ github.sha }}
+            ${{ github.sha }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
