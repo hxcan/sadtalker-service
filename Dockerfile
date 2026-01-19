@@ -18,9 +18,9 @@ RUN apt-get update && apt-get install -y \
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 
-# ✅ 关键：使用 torch==1.12.1+cu113 的 Python 3.10 版本
-RUN pip install torch==1.12.1+cu113 \
-    torchvision==0.13.1+cu113 \
+# ✅ 关键：使用 torch==1.12.1，不加 +cu113，但 --extra-index-url 保持 cu113
+RUN pip install torch==1.12.1 \
+    torchvision==0.13.1 \
     torchaudio==0.12.1 \
     --extra-index-url https://download.pytorch.org/whl/cu113 \
     --force-reinstall \
