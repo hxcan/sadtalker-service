@@ -1,0 +1,22 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  sadtalker:
+    image: ${IMAGE_NAME}:${IMAGE_TAG}
+    container_name: sadtalker
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - DISABLE_FACE_ENHANCER=${DISABLE_FACE_ENHANCER:-false}
+    volumes:
+      - ./data:/app/data
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

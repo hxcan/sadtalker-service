@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sadtalker
+  namespace: research-experiments  # 指定命名空间
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sadtalker
+  template:
+    metadata:
+      labels:
+        app: sadtalker
+    spec:
+      containers:
+      - name: sadtalker
+        image: hxcan/sadtalker:2025.3.24
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            nvidia.com/gpu: 1  # 如果需要 GPU 支持
+        volumeMounts:
+        - name: results-volume
+          mountPath: /app/results
+      volumes:
+      - name: results-volume
+        emptyDir: {}
