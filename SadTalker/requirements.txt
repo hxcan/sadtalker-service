@@ -1,4 +1,4 @@
-# 使用较新但稳定的版本，优先选择预编译包
+# 使用较新且存在的版本
 numpy>=1.24.0
 face_alignment==1.4.0
 imageio==2.34.0
@@ -14,12 +14,14 @@ yacs==0.1.8
 PyYAML==6.0.1
 joblib>=1.3.0
 scikit-image==0.22.0
-basicsr==1.4.3
+
+# ✅ 修正为真实存在的版本
+basicsr==1.3.3.3
 facexlib==0.4.1
 gradio==3.50.2
 gfpgan==1.3.8
 av==11.0.0
 safetensors==0.4.4
 
-# 强制使用预编译二进制包（避免从源码构建）
---only-binary=numpy,scipy,scikit-image,numba,resampy,librosa,kornia,face_alignment,basicsr,facexlib,gfpgan,av,safetensors,PyYAML
+# 强制使用预编译二进制包
+--only-binary=all
