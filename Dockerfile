@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     tzdata \
+    python3 \
     python3-pip \
     wget \
     && rm -rf /var/lib/apt/lists/*
@@ -17,6 +18,9 @@ RUN apt-get update && apt-get install -y \
 # 手动设置时区为 Asia/Shanghai
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
+
+# ✅ 关键：设置 PATH
+ENV PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH"
 
 # ✅ 关键：使用 torch==1.12.1，不加 +cu113，但 --extra-index-url 保持 cu113
 RUN pip install torch==1.12.1 \
