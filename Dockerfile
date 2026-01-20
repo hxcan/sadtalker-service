@@ -19,9 +19,6 @@ RUN apt-get update && apt-get install -y \
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 
-# ✅ 关键：设置 PATH
-ENV PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH"
-
 # ✅ 关键：使用 torch==1.12.1，不加 +cu113，但 --extra-index-url 保持 cu113
 RUN pip install torch==1.12.1 \
     torchvision==0.13.1 \
@@ -46,6 +43,9 @@ COPY ./serve.py /app/serve.py
 # ✅ 在构建时自动下载权重文件
 RUN chmod +x /app/scripts/download_models.sh && \
     /app/scripts/download_models.sh
+
+# ✅ 关键：设置 WORKDIR（最靠后）
+WORKDIR /app
 
 # 暴露端口
 EXPOSE 5000
