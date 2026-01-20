@@ -8,6 +8,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+        include:
+          - arch: amd64
+            platform: linux/amd64
+          - arch: arm64
+            platform: linux/arm64
 
     steps:
       - name: Checkout code
@@ -27,16 +35,16 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/sadtalker
-          # ✅ 关键：只设置标签，不包含镜像名
+          # ✅ 关键：标签包含架构
           tags: |
-            ${{ github.sha }}
+            ${{ github.sha }}-${{ matrix.arch }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile
-          platforms: linux/amd64,linux/arm64  # ✅ 关键：指定多平台
+          platforms: ${{ matrix.platform }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
