@@ -51,4 +51,4 @@ RUN chmod +x /app/scripts/download_models.sh && \
 EXPOSE 5000
 
 # 启动服务
-CMD ["python", "serve.py"]
+CMD ["python3", "serve.py"]
