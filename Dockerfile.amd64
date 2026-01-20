@@ -1,0 +1,31 @@
+FROM nvidia/cuda:12.1.1-base-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    ffmpeg git curl tzdata python3 python3-pip wget \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
+
+# 维持现有 PyTorch 版本
+RUN pip install torch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 \
+    --extra-index-url https://download.pytorch.org/whl/cu113
+
+RUN pip install flask
+
+COPY ./SadTalker/requirements.txt /app/
+RUN pip install -r /app/requirements.txt
+
+COPY ./SadTalker /app
+COPY ./serve.py /app/serve.py
+
+RUN chmod +x /app/scripts/download_models.sh && \
+    /app/scripts/download_models.sh
+
+WORKDIR /app
+
+EXPOSE 5000
+
+CMD ["python3", "serve.py"]

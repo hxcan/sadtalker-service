@@ -1,4 +1,4 @@
-name: Build & Push Docker Image
+name: Build & Push AMD64 Image
 
 on:
   push:
@@ -8,15 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: [amd64, arm64]
-        include:
-          - arch: amd64
-            platform: linux/amd64
-          - arch: arm64
-            platform: linux/arm64
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -35,23 +26,19 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/sadtalker
-          # ✅ 关键：标签包含架构
           tags: |
-            ${{ github.sha }}-${{ matrix.arch }}
+            ${{ github.sha }}-amd64
 
-      - name: Build and push Docker image
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile
-          platforms: ${{ matrix.platform }}
+          file: Dockerfile.amd64
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Print image tag
-        run: |
-          echo "Built image: ${{ steps.meta.outputs.tags }}"
+      - name: Print tag
+        run: echo "Built image: ${{ steps.meta.outputs.tags }}"
