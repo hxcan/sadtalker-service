@@ -8,14 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: [amd64, arm64]
-        include:
-          - arch: amd64
-            platform: linux/amd64
-          - arch: arm64
-            platform: linux/arm64
 
     steps:
       - name: Checkout code
