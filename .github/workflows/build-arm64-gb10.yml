@@ -41,4 +41,5 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Print tag
-        run: echo "Built image: ${{ steps.meta.outputs.tags }}"
+        run: |
+          echo "Built image: ${{ steps.meta.outputs.tags }}"
