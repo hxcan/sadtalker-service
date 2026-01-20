@@ -12,18 +12,16 @@ RUN apt-get update && apt-get install -y \
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 
-# 下载并安装 EmreYuz 编译的 GB10 专属 PyTorch
-RUN wget https://github.com/EmreYuz/pytorch-gb10/releases/download/v2.10.0/torch-2.10.0a0+gitcf6d089-cp310-cp310-linux_aarch64.whl && \
-    pip install torch-2.10.0a0+gitcf6d089-cp310-cp310-linux_aarch64.whl --break-system-packages && \
-    rm torch-2.10.0a0+gitcf6d089-cp310-cp310-linux_aarch64.whl
+# ✅ 使用官方 cu130 版本（支持 sm_121）
+RUN pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 \
+    --extra-index-url https://download.pytorch.org/whl/cu130 \
+    --break-system-packages
 
-# 安装其他 Python 包
-RUN pip install flask --break-system-packages
-
-# 复制项目文件
+# 其他 Python 包
 COPY ./SadTalker/requirements.txt /app/
 RUN pip install -r /app/requirements.txt --break-system-packages
 
+# 复制项目文件
 COPY ./SadTalker /app
 COPY ./serve.py /app/serve.py
 
