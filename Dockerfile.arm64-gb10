@@ -12,10 +12,7 @@ RUN apt-get update && apt-get install -y \
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 
-# ✅ 只升级 pip，不碰 setuptools 和 wheel
-RUN pip install --upgrade pip --break-system-packages
-
-# ✅ 安装 PyTorch cu130 官方支持版本
+# ✅ 直接安装 PyTorch cu130（不升级 pip）
 RUN pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 \
     --extra-index-url https://download.pytorch.org/whl/cu130 \
     --break-system-packages
@@ -24,7 +21,9 @@ RUN pip install torch==2.9.1 torchvision==0.24.1 torchaudio==2.9.1 \
 COPY ./SadTalker/requirements.txt /app/
 
 # ✅ 强制使用预编译二进制包，避免从源码构建
-RUN pip install -r /app/requirements.txt --break-system-packages --only-binary=all
+RUN pip install -r /app/requirements.txt \
+    --break-system-packages \
+    --only-binary=all
 
 # 复制代码
 COPY ./SadTalker /app
