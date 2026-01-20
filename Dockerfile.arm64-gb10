@@ -14,15 +14,15 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
 
 # 下载并安装 EmreYuz 编译的 GB10 专属 PyTorch
 RUN wget https://github.com/EmreYuz/pytorch-gb10/releases/download/v2.10.0/torch-2.10.0a0+gitcf6d089-cp310-cp310-linux_aarch64.whl && \
-    pip install torch-2.10.0a0+gitcf6d089-cp310-cp310-linux_aarch64.whl && \
+    pip install torch-2.10.0a0+gitcf6d089-cp310-cp310-linux_aarch64.whl --break-system-packages && \
     rm torch-2.10.0a0+gitcf6d089-cp310-cp310-linux_aarch64.whl
 
 # 安装其他 Python 包
-RUN pip install flask
+RUN pip install flask --break-system-packages
 
 # 复制项目文件
 COPY ./SadTalker/requirements.txt /app/
-RUN pip install -r /app/requirements.txt
+RUN pip install -r /app/requirements.txt --break-system-packages
 
 COPY ./SadTalker /app
 COPY ./serve.py /app/serve.py
@@ -35,5 +35,4 @@ WORKDIR /app
 
 EXPOSE 5000
 
-# 启动服务
 CMD ["python3", "serve.py"]
