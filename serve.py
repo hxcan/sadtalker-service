@@ -48,9 +48,9 @@ def animate():
 
         # ✅ 不需要添加 --device cpu，SadTalker 会自动 fallback
 
-        # 构建命令（完全交给 SadTalker 自动选择设备）
+        # 构建命令（使用 python3）
         command = [
-            "python", "inference.py",
+            "python3", "inference.py",  # ✅ 关键：改为 python3
             "--driven_audio", audio_path,
             "--source_image", image_path,
             "--result_dir", output_dir
