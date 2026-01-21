@@ -29,13 +29,21 @@ RUN apt-get update && \
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata
 
-# 复制项目文件
+# 复制原始项目依赖并安装
 COPY ./SadTalker/requirements.txt /app/
+
+# 安装原始项目依赖
+RUN pip install -r /app/requirements.txt --break-system-packages
+
+# 复制本地服务依赖
+COPY ./requirements.local.txt .
+
+# 安装本地服务依赖
+RUN pip install -r requirements.local.txt --break-system-packages
+
+# 复制代码
 COPY ./SadTalker /app
 COPY ./serve.py /app/serve.py
-
-# 安装 Python 依赖（允许 av 编译）
-RUN pip install -r /app/requirements.txt --break-system-packages
 
 # 自动下载权重
 RUN chmod +x /app/scripts/download_models.sh && \
