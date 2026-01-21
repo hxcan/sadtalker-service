@@ -1,27 +1,24 @@
-# 使用较新且存在的版本
-numpy>=1.24.0
-face_alignment==1.4.0
-imageio==2.34.0
-imageio-ffmpeg==0.5.1
-librosa==0.10.2
-numba==0.59.0
-resampy==0.4.2
-pydub==0.25.1
+# 核心库（允许浮动）
+face_alignment
+imageio==2.34.0      # 固定有 bug 的包
+imageio-ffmpeg
+librosa
+numba
+resampy
+pydub
 scipy>=1.11.0
-kornia==0.7.0
-tqdm==4.66.0
-yacs==0.1.8
-PyYAML==6.0.1
-joblib>=1.3.0
-scikit-image==0.22.0
+kornia
+tqdm
+yacs
+PyYAML
+joblib
+scikit-image
+basicsr
+facexlib
+gradio
+gfpgan
+av
+safetensors
 
-# 使用真实发布的版本
-basicsr==1.3.3.3
-facexlib==0.3.0  # ✅ 存在的最高版本
-gradio==3.50.2
-gfpgan==1.3.8
-av==11.0.0
-safetensors==0.4.4
-
-# 强制使用预编译二进制包
---only-binary=all
+# 只在特定平台需要
+# (arm64 上 av 可能需编译)
