@@ -4,16 +4,25 @@ FROM hxcan/pytorch-cuda:latest
 # 设置非交互式安装模式
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 安装系统依赖
+# 安装系统依赖（重点补充）
 RUN apt-get update && \
     apt-get install -y \
         ffmpeg \
         git \
+        wget \
         curl \
         tzdata \
-        wget \
         libgl1 \
         libglib2.0-0 \
+        # 编译 av 所需的开发工具链
+        pkg-config \
+        libavcodec-dev \
+        libavformat-dev \
+        libswscale-dev \
+        libavdevice-dev \
+        libavfilter-dev \
+        libavutil-dev \
+        libswresample-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # 设置时区
@@ -25,8 +34,8 @@ COPY ./SadTalker/requirements.txt /app/
 COPY ./SadTalker /app
 COPY ./serve.py /app/serve.py
 
-# 安装 Python 依赖（使用预编译）
-RUN pip install -r /app/requirements.txt --break-system-packages --only-binary=all
+# 安装 Python 依赖（允许 av 编译）
+RUN pip install -r /app/requirements.txt --break-system-packages
 
 # 自动下载权重
 RUN chmod +x /app/scripts/download_models.sh && \
