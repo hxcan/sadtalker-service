@@ -1,4 +1,4 @@
-name: Build & Push SadTalker Service (Multi-Arch Matrix)
+name: Build & Push Multi-Architecture SadTalker Image
 
 on:
   push:
@@ -7,18 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch:
-          - amd64
-          - arm64
-        include:
-          - arch: amd64
-            platform: linux/amd64
-            tag_suffix: amd64
-          - arch: arm64
-            platform: linux/arm64
-            tag_suffix: arm64
 
     steps:
       - name: Checkout code
@@ -39,16 +27,21 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/sadtalker-service
           tags: |
-            ${{ github.sha }}-${{ matrix.tag_suffix }}
-            latest-${{ matrix.tag_suffix }}
+            ${{ github.sha }}
+            latest
 
-      - name: Build and push image
+      - name: Build and push multi-platform image
         uses: docker/build-push-action@v5
         with:
           context: .
           file: Dockerfile
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Print built tag
+        run: |
+          echo "✅ Built and pushed multi-arch image:"
+          echo "    ${{ steps.meta.outputs.tags }}"
