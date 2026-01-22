@@ -15,7 +15,7 @@ def calculate_points(heatmaps):
     indexes = np.argmax(heatline, axis=2)
 
     preds = np.stack((indexes % W, indexes // W), axis=2)
-    preds.astype(float, copy=False)  # ✅ Python 内置 float，兼容所有 numpy 版本
+    preds = preds.astype(float, copy=False)  # ✅ 赋值！否则无效
 
     inr = indexes.ravel()
 
