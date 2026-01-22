@@ -1,10 +1,14 @@
-# 使用预构建的基础镜像
+# ================================
+#  SadTalker 服务镜像（支持 amd64 + arm64）
+#  基于 hxcan/pytorch-cuda 统一构建
+# ================================
+
 FROM hxcan/pytorch-cuda:latest
 
 # 设置非交互式安装模式
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 安装系统依赖（重点补充）
+# 安装系统依赖
 RUN apt-get update && \
     apt-get install -y \
         ffmpeg \
@@ -31,11 +35,9 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
 
 # 复制原始项目依赖并安装
 COPY ./SadTalker/requirements.txt /app/
-
-# 安装原始项目依赖
 RUN pip install -r /app/requirements.txt --break-system-packages
 
-# ✅ 关键：注入 torchvision 兼容层
+# ✅ 注入 torchvision 兼容层
 RUN mkdir -p /usr/local/lib/python3.12/dist-packages/torchvision/transforms/functional_tensor && \
     echo 'from torchvision.transforms.functional import rgb_to_grayscale' > /usr/local/lib/python3.12/dist-packages/torchvision/transforms/functional_tensor/__init__.py
 
