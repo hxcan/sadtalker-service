@@ -37,7 +37,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/sadtalker-service
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/sadtalker
           tags: |
             ${{ github.sha }}-${{ matrix.tag_suffix }}
             latest-${{ matrix.tag_suffix }}
