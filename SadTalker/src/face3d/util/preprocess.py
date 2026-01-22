@@ -78,7 +78,7 @@ def align_img(img, lm, lm3D, mask=None, target_size=224., rescale_factor=102.):
         img_new            --PIL.Image  (target_size, target_size, 3)
         lm_new             --numpy.array  (68, 2), y direction is opposite to v direction
         mask_new           --PIL.Image  (target_size, target_size)
-    
+
     Parameters:
         img                --PIL.Image  (raw_H, raw_W, 3)
         lm                 --numpy.array  (68, 2), y direction is opposite to v direction
@@ -94,10 +94,32 @@ def align_img(img, lm, lm3D, mask=None, target_size=224., rescale_factor=102.):
 
     # calculate translation and scale factors using 5 facial landmarks and standard landmarks of a 3D face
     t, s = POS(lm5p.transpose(), lm3D.transpose())
-    s = rescale_factor/s
+    s = rescale_factor / s
+
+    # ✅ 调试：打印 t 的类型和值
+    print(f"🔧 debug: type(t) = {type(t)}, shape = {getattr(t, 'shape', None)}")
+    try:
+        print(f"🔧 debug: t = {t}")
+        print(f"🔧 debug: t[0] = {t[0]}, type(t[0]) = {type(t[0])}, value = {float(t[0]):.6f}")
+        print(f"🔧 debug: t[1] = {t[1]}, type(t[1]) = {type(t[1])}, value = {float(t[1]):.6f}")
+    except Exception as e:
+        print(f"🔧 debug: error printing t - {e}")
 
     # processing the image
     img_new, lm_new, mask_new = resize_n_crop_img(img, lm, t, s, target_size=target_size, mask=mask)
-    trans_params = np.array((w0, h0, s, *t[:2])).astype(float)
+
+    # ✅ 安全构建 trans_params：全部转为 Python 原生 float
+    try:
+        trans_params = np.array([
+            float(w0),
+            float(h0),
+            float(s),
+            float(t[0]),
+            float(t[1])
+        ])
+        print(f"✅ trans_params created: {trans_params}")
+    except Exception as e:
+        print(f"❌ Failed to create trans_params: {e}")
+        raise
 
     return trans_params, img_new, lm_new, mask_new
