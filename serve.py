@@ -50,7 +50,7 @@ def animate():
 
         # 构建命令（使用 python3）
         command = [
-            "python3", "inference.py",  # ✅ 关键：改为 python3
+            "python3", "inference.py",
             "--driven_audio", audio_path,
             "--source_image", image_path,
             "--result_dir", output_dir
@@ -80,3 +80,6 @@ def animate():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
+# 🔧 缓存破坏标记：强制每次构建产生不同层（防止 Docker Hub 因内容重复拒绝推送）
+# Build timestamp: ${{ github.event.head_commit.timestamp }}
