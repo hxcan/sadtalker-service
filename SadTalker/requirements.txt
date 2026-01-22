@@ -19,9 +19,6 @@ gradio
 gfpgan
 av
 safetensors
-torch==2.9.1
-torchvision==0.23.0  # ✅ 必须指定，不能用 0.24.1
-torchaudio==2.9.1
 
 # 只在特定平台需要
 # (arm64 上 av 可能需编译)

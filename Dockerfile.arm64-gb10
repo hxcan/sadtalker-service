@@ -35,10 +35,12 @@ COPY ./SadTalker/requirements.txt /app/
 # 安装原始项目依赖
 RUN pip install -r /app/requirements.txt --break-system-packages
 
+# ✅ 关键：注入 torchvision 兼容层
+RUN mkdir -p /usr/local/lib/python3.12/dist-packages/torchvision/transforms/functional_tensor && \
+    echo 'from torchvision.transforms.functional import rgb_to_grayscale' > /usr/local/lib/python3.12/dist-packages/torchvision/transforms/functional_tensor/__init__.py
+
 # 复制本地服务依赖
 COPY ./requirements.local.txt .
-
-# 安装本地服务依赖
 RUN pip install -r requirements.local.txt --break-system-packages
 
 # 复制代码
